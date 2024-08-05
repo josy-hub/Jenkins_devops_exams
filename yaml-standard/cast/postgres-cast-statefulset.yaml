@@ -17,9 +17,15 @@ spec:
             - name: POSTGRES_DB
               value: cast_db_dev
             - name: POSTGRES_PASSWORD
-              value: cast_db_password
+              valueFrom: 
+                secretKeyRef: 
+                  name: postgres-cast 
+                  key: POSTGRES_PASSWORD 
             - name: POSTGRES_USER
-              value: cast_db_username
+              valueFrom: 
+                secretKeyRef: 
+                  name: postgres-cast 
+                  key: POSTGRES_USER
           image: postgres:12.1-alpine
           name: cast-db
           volumeMounts:
