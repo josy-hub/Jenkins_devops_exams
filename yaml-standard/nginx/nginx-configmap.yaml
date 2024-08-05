@@ -15,8 +15,4 @@ data:
     }
 kind: ConfigMap
 metadata:
-  annotations:
-    use-subpath: "true"
-  labels:
-    io.kompose.service: nginx
-  name: nginx-cm0
+  name: nginx-configmap
