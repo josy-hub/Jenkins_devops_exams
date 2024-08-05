@@ -1,51 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -o yaml-standard/
-    kompose.version: 1.34.0 (cbf2835db)
-  labels:
-    io.kompose.service: movie-service
   name: movie-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: movie-service
-  strategy:
-    type: Recreate
+      app: movie-service
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -o yaml-standard/
-        kompose.version: 1.34.0 (cbf2835db)
       labels:
-        io.kompose.service: movie-service
+        app: movie-service
     spec:
       containers:
-        - args:
-            - uvicorn
-            - app.main:app
-            - --reload
-            - --host
-            - 0.0.0.0
-            - --port
-            - "8000"
+        - name: movie-service
+          image: movie-service
+          imagePullPolicy: IfNotPresent
+          command: ["bash", "-c"]
+          args: ["uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"]
           env:
             - name: CAST_SERVICE_HOST_URL
-              value: http://cast_service:8000/api/v1/casts/
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-configmap
+                  key: CAST_SERVICE_HOST_URL             
             - name: DATABASE_URI
-              value: postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev
-          image: movie-service
-          name: movie-service
+              valueFrom:
+                configMapKeyRef:
+                  name: movie-configmap
+                  key: DATABASE_URI
           ports:
             - containerPort: 8000
               protocol: TCP
           volumeMounts:
-            - mountPath: /app
-              name: movie-service-cm0
-      restartPolicy: Always
+            - mountPath: /home/movie_data
+              name: movie-data
       volumes:
-        - configMap:
-            name: movie-service-cm0
-          name: movie-service-cm0
+        - name: movie-data
+          persistentVolumeClaim:
+            claimName: movie-pvc
