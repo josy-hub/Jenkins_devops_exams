@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cast_service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cast_service
+  template:
+    metadata:
+      labels:
+        app: cast_service
+    spec:
+      containers:
+        - name: cast_service
+          image: cast-service
+          command: ["bash", "-c"]
+          args: ["uvicorn main:app --reload --host 0.0.0.0 --port 8000"]
+          env:
+            - name: DATABASE_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: cast-configmap
+                  key: DATABASE_URI
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /home/cast_data
+              name: cast_data
+      volumes:
+        - name: cast_data
+          persistentVolumeClaim:
+            claimName: cast-pvc
