@@ -24,5 +24,12 @@ spec:
               subPath: default.conf
       volumes:
         - name: nginx-conf
-          persistentVolumeClaim:
-            claimName: nginx-pvc
+          configMap:
+            items:
+              - key: nginx_config.conf
+                path: default.conf
+            name: nginx-configmap
+      #volumes:
+      #  - name: nginx-conf
+       #   persistentVolumeClaim:
+        #    claimName: nginx-pvc
