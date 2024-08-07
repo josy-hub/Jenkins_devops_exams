@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: cast-configmap
 data:
-  DATABASE_URI: postgresql://cast_db_username:cast_db_password@cast_db/cast_db_dev
+  DATABASE_URI: postgresql://cast_db_username:cast_db_password@cast-db:5433/cast_db_dev

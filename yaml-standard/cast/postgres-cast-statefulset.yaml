@@ -20,14 +20,17 @@ spec:
               valueFrom: 
                 secretKeyRef: 
                   name: postgres-cast 
-                  key: POSTGRES_PASSWORD 
+                  key: password 
             - name: POSTGRES_USER
               valueFrom: 
                 secretKeyRef: 
                   name: postgres-cast 
-                  key: POSTGRES_USER
+                  key: user
           image: postgres:12.1-alpine
           name: cast-db
+          ports:
+            - containerPort: 5432
+              protocol: TCP
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-data-cast

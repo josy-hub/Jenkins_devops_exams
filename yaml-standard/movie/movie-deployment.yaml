@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: movie_service
+  name: movie-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: movie_service
+      app: movie-service
   template:
     metadata:
       labels:
-        app: movie_service
+        app: movie-service
     spec:
       containers:
-        - name: movie_service
+        - name: movie-service
           image: jenkins_devops_exams_movie_service
           imagePullPolicy: IfNotPresent
           command: ["bash", "-c"]
@@ -23,7 +23,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: movie-configmap
-                  key: CAST_SERVICE_HOST_URL             
+                  key: cast_host_url             
             - name: DATABASE_URI
               valueFrom:
                 configMapKeyRef:
@@ -33,7 +33,7 @@ spec:
             - containerPort: 8000
               protocol: TCP
           volumeMounts:
-            - mountPath: /home/movie_data
+            - mountPath: /home/movie-data
               name: movie-data
       volumes:
         - name: movie-data

@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cast_service
+  name: cast-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cast_service
+      app: cast-service
   template:
     metadata:
       labels:
-        app: cast_service
+        app: cast-service
     spec:
       containers:
-        - name: cast_service
+        - name: cast-service
           image: jenkins_devops_exams_cast_service
           imagePullPolicy: IfNotPresent
           command: ["bash", "-c"]
@@ -28,9 +28,9 @@ spec:
             - containerPort: 8000
               protocol: TCP
           volumeMounts:
-            - mountPath: /home/cast_data
-              name: cast_data
+            - mountPath: /home/cast-data
+              name: cast-data
       volumes:
-        - name: cast_data
+        - name: cast-data
           persistentVolumeClaim:
             claimName: cast-pvc
