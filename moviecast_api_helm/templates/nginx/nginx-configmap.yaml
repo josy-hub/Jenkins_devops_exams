@@ -15,4 +15,4 @@ data:
     }
 kind: ConfigMap
 metadata:
-  name: nginx-configmap
+  name: {{ .Values.nginx.configmap }}

@@ -1,6 +1,6 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cast-configmap
+  name: {{ .Values.cast_service.configmap }}
 data:
-  DATABASE_URI: postgresql://cast_db_username:cast_db_password@cast-db:5433/cast_db_dev
+  {{ .Values.cast_service.env.ENV_URI }}: postgresql://cast_db_username:cast_db_password@cast-db:5433/cast_db_dev

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cast-db
+  name: {{ .Values.cast_db.service.name }}
 spec:
   ports:
     - name: "http2"
-      port: 5433
-      targetPort: 5432
+      port: {{ .Values.cast_db.service.port }}
+      targetPort: {{ .Values.cast_db.service.targetPort }}
   selector:
-    app: cast-db
+    app: {{ .Values.cast_db.metadata.label }}

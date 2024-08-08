@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: movie-service
+  name: {{ .Values.movie_service.service.name }}
 spec:
- type: NodePort
+ type: {{ .Values.movie_service.service.type }}
  ports:
    - name: "http"
-     port: 8001
-     targetPort: 8000
+     port: {{ .Values.movie_service.service.port }}
+     targetPort: {{ .Values.movie_service.service.targetPort }}
  selector:
-   app: movie-service
+   app: {{ .Values.movie_service.metadata.label }}

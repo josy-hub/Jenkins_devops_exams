@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: movie-db
+  name: {{ .Values.movie_db.service.name }}
 spec:
   ports:
     - name: "http"
-      port: 5432
-      targetPort: 5432
+      port: {{ .Values.movie_db.service.port }}
+      targetPort: {{ .Values.movie_db.service.targetPort }}
   selector:
-    app: movie-db
+    app: {{ .Values.movie_db.metadata.label }}

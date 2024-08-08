@@ -1,41 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: movie-service
+  name: {{ .Values.movie_service.metadata.label }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: movie-service
+      app: {{ .Values.movie_service.metadata.label }}
   template:
     metadata:
       labels:
-        app: movie-service
+        app: {{ .Values.movie_service.metadata.label }}
     spec:
       containers:
-        - name: movie-service
-          image: jenkins_devops_exams_movie_service
-          imagePullPolicy: IfNotPresent
-          command: ["bash", "-c"]
-          args: ["uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"]
+        - name: {{ .Values.movie_service.metadata.label }}
+          image: {{ .Values.movie_service.image.repository }}
+          imagePullPolicy: {{ .Values.movie_service.image.pullPolicy }}
+          command: ["{{ .Values.movie_service.spec.containers.command }}", "{{ .Values.movie_service.spec.containers.cmdoption }}"]
+          args: ["{{ .Values.movie_service.spec.containers.args }}"]
           env:
-            - name: CAST_SERVICE_HOST_URL
+            - name: {{ .Values.movie_service.env.ENV_HOST }}
               valueFrom:
                 configMapKeyRef:
-                  name: movie-configmap
-                  key: cast_host_url             
-            - name: DATABASE_URI
+                  name: {{ .Values.movie_service.configmap }}
+                  key: {{ .Values.movie_service.env.ENV_HOST }}             
+            - name: {{ .Values.movie_service.env.ENV_URI }}
               valueFrom:
                 configMapKeyRef:
-                  name: movie-configmap
-                  key: DATABASE_URI
+                  name: {{ .Values.movie_service.configmap }}
+                  key: {{ .Values.movie_service.env.ENV_URI }}
           ports:
-            - containerPort: 8000
+            - containerPort: {{ .Values.movie_service.service.targetPort }}
               protocol: TCP
           volumeMounts:
-            - mountPath: /home/movie-data
-              name: movie-data
+           {{- range .Values.movie_service.volumeMounts }}
+            - mountPath: {{ .mountPath }}
+              name: {{ .name }}
+            {{- end }}
       volumes:
-        - name: movie-data
+       {{- range .Values.movie_service.volumes }}
+        - name: {{ .name }}
           persistentVolumeClaim:
-            claimName: movie-pvc
+            claimName: {{ .persistentVolumeClaim.claimName }}
+        {{- end }}

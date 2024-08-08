@@ -1,40 +1,44 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: cast-db
+  name: {{ .Values.cast_db.metadata.label }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cast-db
+      app: {{ .Values.cast_db.metadata.label }}
   template:
     metadata:
       labels:
-        app: cast-db
+        app: {{ .Values.cast_db.metadata.label }}
     spec:
       containers:
         - env:
             - name: POSTGRES_DB
-              value: cast_db_dev
-            - name: POSTGRES_PASSWORD
+              value: {{ .Values.cast_db.env.ENV_DB }}
+            - name: {{ .Values.cast_db.env.ENV_DB_PASSWORD }}
               valueFrom: 
                 secretKeyRef: 
-                  name: postgres-cast 
+                  name: {{ .Values.cast_db.secret }} 
                   key: password 
-            - name: POSTGRES_USER
+            - name: {{ .Values.cast_db.env.ENV_DB_USER }}
               valueFrom: 
                 secretKeyRef: 
-                  name: postgres-cast 
+                  name: {{ .Values.cast_db.secret }} 
                   key: user
-          image: postgres:12.1-alpine
-          name: cast-db
+          image: {{ .Values.cast_db.image.repository }}:{{ .Values.cast_db.image.tag }}
+          name: {{ .Values.cast_db.metadata.label }}
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.cast_db.service.targetPort }}
               protocol: TCP
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: postgres-data-cast
+           {{- range .Values.cast_db.volumeMounts }}
+            - mountPath: {{ .mountPath }}
+              name: {{ .name }}
+            {{- end }}
       volumes:
-        - name: postgres-data-cast
+       {{- range .Values.cast_db.volumes }}
+        - name: {{ .name }}
           persistentVolumeClaim:
-            claimName: postgres-cast-pvc
+            claimName: {{ .persistentVolumeClaim.claimName }}
+        {{- end }}

@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: {{ .Values.nginx.service.name }}
 spec:
- type: NodePort
+ type: {{ .Values.nginx.service.type }}
  ports:
    - name: "http"
-     port: 8080
-     targetPort: 8080
+     port: {{ .Values.nginx.service.port }}
+     targetPort: {{ .Values.nginx.service.targetPort }}
  selector:
-   app: nginx
+   app: {{ .Values.nginx.metadata.label }}

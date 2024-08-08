@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-cast-pvc
+  name: {{ .Values.cast_db.pvc.name }}
 spec:
-  storageClassName: local-path
+  storageClassName: {{ .Values.cast_db.pvc.storageCassName }}
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.cast_db.pvc.accessMode }}
   resources:
     requests:
-      storage: 5Gi
+      storage: {{ .Values.cast_db.pvc.storage }}
