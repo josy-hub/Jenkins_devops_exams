@@ -11,7 +11,7 @@ stages {
         stage(' Docker Build'){ // docker build image stage
             steps {
                 script {
-                sh '''
+                bash '''
                  docker-compose build
                  APPS=("cast" "movie")
                  for APP in ${APP[@]}; do
@@ -24,7 +24,7 @@ stages {
         stage('Docker run'){ // run container from our builded image
                 steps {
                     script {
-                    sh '''
+                    bash '''
                     docker-compose up -d
                     docker ps
                     docker logs
@@ -37,7 +37,7 @@ stages {
         stage('Test Acceptance'){ // we launch the curl command to validate that the container responds to the request
             steps {
                     script {
-                    sh '''
+                    bash '''
                     curl localhost:8080/
                     '''
                     }
@@ -53,7 +53,7 @@ stages {
             steps {
 
                 script {
-                sh '''
+                bash '''
                 APPS=("cast" "movie")
                 docker login -u $DOCKER_ID -p $DOCKER_PASS
                 for APP in ${APP[@]}; do
@@ -71,7 +71,7 @@ stage('Deploiement en dev'){
         }
             steps {
                 script {
-                sh '''
+                bash '''
                 rm -Rf .kube
                 mkdir .kube
                 ls
@@ -92,7 +92,7 @@ stage('Deploiement en qa'){
         }
             steps {
                 script {
-                sh '''
+                bash '''
                 rm -Rf .kube
                 mkdir .kube
                 ls
@@ -113,7 +113,7 @@ stage('Deploiement en staging'){
         }
             steps {
                 script {
-                sh '''
+                bash '''
                 rm -Rf .kube
                 mkdir .kube
                 ls
@@ -142,7 +142,7 @@ stage('Deploiement en prod'){
                   input message: 'Do you want to deploy in production ?', ok: 'Yes'
                 }
                 script {
-                sh '''
+                bash '''
                 rm -Rf .kube
                 mkdir .kube
                 ls
