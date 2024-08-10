@@ -16,7 +16,7 @@ cast_service:
     containers:
       command: "bash"
       cmdoption: "-c"
-      args: "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
+      args: "uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
   env:
     ENV_URI: DATABASE_URI 
   service:
@@ -84,7 +84,7 @@ movie_service:
     containers:
       command: "bash"
       cmdoption: "-c"
-      args: "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
+      args: "uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
   env:
     ENV_URI: DATABASE_URI
     ENV_HOST: CAST_SERVICE_HOST_URL     

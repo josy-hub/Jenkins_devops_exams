@@ -28,8 +28,8 @@ spec:
        {{- range .Values.nginx.volumes }}
         - name: {{ .name }}
           configMap:
-            - name: {{ .configMap.name }}
+            name: {{ .configMap.name }}
         {{- end }}
-              items:
-                - key: nginx_config.conf
-                  path: default.conf
+            items:
+              - key: nginx_config.conf
+                path: default.conf
