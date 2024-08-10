@@ -11,10 +11,10 @@ stages {
         stage(' Docker Build'){ // docker build image stage
             steps {
                 script {
-                bash '''
+                sh '''
                  docker-compose build
                  APPS=("cast" "movie")
-                 for APP in ${APP[@]}; do
+                 for APP in "${APP[@]}"; do
                  docker tag "jenkins_devops_exams_$APP_service:latest" "$DOCKER_ID/$DOCKER_REPO:${APP}_$DOCKER_TAG"; done
                 sleep 10
                 '''
@@ -24,7 +24,7 @@ stages {
         stage('Docker run'){ // run container from our builded image
                 steps {
                     script {
-                    bash '''
+                    sh '''
                     docker-compose up -d
                     docker ps
                     docker logs
@@ -37,7 +37,7 @@ stages {
         stage('Test Acceptance'){ // we launch the curl command to validate that the container responds to the request
             steps {
                     script {
-                    bash '''
+                    sh '''
                     curl localhost:8080/
                     '''
                     }
@@ -53,10 +53,10 @@ stages {
             steps {
 
                 script {
-                bash '''
+                sh '''
                 APPS=("cast" "movie")
                 docker login -u $DOCKER_ID -p $DOCKER_PASS
-                for APP in ${APP[@]}; do
+                for APP in "${APP[@]}"; do
                 docker push "$DOCKER_ID/$DOCKER_REPO:${APP}_$DOCKER_TAG"; done
                 '''
                 }
@@ -71,7 +71,7 @@ stage('Deploiement en dev'){
         }
             steps {
                 script {
-                bash '''
+                sh '''
                 rm -Rf .kube
                 mkdir .kube
                 ls
@@ -92,7 +92,7 @@ stage('Deploiement en qa'){
         }
             steps {
                 script {
-                bash '''
+                sh '''
                 rm -Rf .kube
                 mkdir .kube
                 ls
@@ -113,7 +113,7 @@ stage('Deploiement en staging'){
         }
             steps {
                 script {
-                bash '''
+                sh '''
                 rm -Rf .kube
                 mkdir .kube
                 ls
@@ -142,7 +142,7 @@ stage('Deploiement en prod'){
                   input message: 'Do you want to deploy in production ?', ok: 'Yes'
                 }
                 script {
-                bash '''
+                sh '''
                 rm -Rf .kube
                 mkdir .kube
                 ls
