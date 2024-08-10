@@ -152,7 +152,7 @@ nginx:
   service:
     name: nginx
     type: NodePort
-    port: 8080
+    port: 8081
     targetPort: 8080
   configmap: nginx-configmap
   volumeMounts:
