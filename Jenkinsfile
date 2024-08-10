@@ -1,7 +1,7 @@
 pipeline {
 environment { // Declaration of environment variables
 DOCKER_ID = "josydocker22" // replace this with your docker-id
-DOCKER_REPO = jenkins_devops_exams
+DOCKER_REPO = "jenkins_devops_exams"
 DOCKER_IMAGE_CAST = "jenkins_devops_exams_cast_service"
 DOCKER_IMAGE_MOVIE = "jenkins_devops_exams_movie_service"
 DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build in order to increment the value by 1 with each new build
