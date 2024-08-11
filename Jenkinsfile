@@ -119,7 +119,7 @@ stage('Deploiement en staging'){
                 cat $KUBECONFIG > .kube/config
                 cp moviecast_api_helm/values.yaml values.yml
                 cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+#                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install moviecast-api moviecast_api_helm --values=values.yml --namespace staging
                 '''
                 }
