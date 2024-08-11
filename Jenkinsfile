@@ -27,7 +27,6 @@ stages {
                     sh '''
                     docker-compose up -d
                     docker ps
-                    docker logs
                     sleep 10
                     '''
                     }
