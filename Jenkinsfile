@@ -12,6 +12,7 @@ stages {
             steps {
                 script {
                 sh '''
+                 #!/bin/bash
                  docker-compose build
                  APPS=("cast" "movie")
                  for APP in "${APP[@]}"; do
@@ -54,6 +55,7 @@ stages {
 
                 script {
                 sh '''
+                #!/bin/bash
                 APPS=("cast" "movie")
                 docker login -u $DOCKER_ID -p $DOCKER_PASS
                 for APP in "${APP[@]}"; do
