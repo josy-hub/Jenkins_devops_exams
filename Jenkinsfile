@@ -14,8 +14,8 @@ stages {
                 sh '''
                  #!/bin/bash
                  docker-compose build
-                 APPS=("cast" "movie")
-                 for APP in "${APPS[@]}"; do
+                 APPS="cast movie"
+                 for APP in $APPS; do
                  docker tag "jenkins_devops_exams_$APP_service:latest" "$DOCKER_ID/$DOCKER_REPO:${APP}_$DOCKER_TAG"; done
                 sleep 10
                 '''
@@ -56,9 +56,9 @@ stages {
                 script {
                 sh '''
                 #!/bin/bash
-                APPS=("cast" "movie")
+                APPS="cast movie"
                 docker login -u $DOCKER_ID -p $DOCKER_PASS
-                for APP in "${APPS[@]}"; do
+                for APP in $APPS; do
                 docker push "$DOCKER_ID/$DOCKER_REPO:${APP}_$DOCKER_TAG"; done
                 '''
                 }
