@@ -129,14 +129,14 @@ stage('Deploiement en staging'){
 stage('Deploiement en prod'){
         environment
         {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+          KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+        }
+        when {
+          expression {
+            return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
+          }
         }
             steps {
-               when {
-                 expression {
-                    return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
-                 }
-               }
                 timeout(time: 15, unit: "MINUTES") {
                   input message: 'Do you want to deploy in production ?', ok: 'Yes'
                 }
