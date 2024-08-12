@@ -4,8 +4,7 @@ metadata:
   name: {{ .Values.cast_db.service.name }}
 spec:
   ports:
-    - name: "http2"
-      port: {{ .Values.cast_db.service.port }}
+    - port: {{ .Values.cast_db.service.port }}
       targetPort: {{ .Values.cast_db.service.targetPort }}
   selector:
     app: {{ .Values.cast_db.metadata.label }}

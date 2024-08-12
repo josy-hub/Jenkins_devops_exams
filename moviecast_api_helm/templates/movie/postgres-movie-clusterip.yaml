@@ -4,8 +4,7 @@ metadata:
   name: {{ .Values.movie_db.service.name }}
 spec:
   ports:
-    - name: "http"
-      port: {{ .Values.movie_db.service.port }}
+    - port: {{ .Values.movie_db.service.port }}
       targetPort: {{ .Values.movie_db.service.targetPort }}
   selector:
     app: {{ .Values.movie_db.metadata.label }}
