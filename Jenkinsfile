@@ -135,7 +135,7 @@ stage('Deploiement en prod'){
         }
         when {
           expression {
-            BRANCH_NAME ==~ /(main|master)/
+            return BRANCH_NAME ==~ /(origin\/main|origin\/master)/
           }
         }
             steps {
