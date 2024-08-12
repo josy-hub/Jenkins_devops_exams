@@ -1,15 +1,15 @@
 pipeline {
-environment { // Declaration of environment variables
-DOCKER_ID = "josydocker22" // replace this with your docker-id
+environment {
+DOCKER_ID = "josydocker22"
 DOCKER_REPO = "jenkins_devops_exams"
 DOCKER_IMAGE_CAST = "jenkins_devops_exams_cast_service"
 DOCKER_IMAGE_MOVIE = "jenkins_devops_exams_movie_service"
-DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build in order to increment the value by 1 with each new build
+DOCKER_TAG = "v.${BUILD_ID}.0"
 BRANCH_NAME = "${env.GIT_BRANCH}"
 }
-agent any // Jenkins will be able to select all available agents
+agent any
 stages {
-        stage(' Docker Build'){ // docker build image stage
+        stage(' Docker Build'){
             steps {
                 script {
                 sh '''
@@ -22,7 +22,7 @@ stages {
                 }
             }
         }
-        stage('Docker run'){ // run container from our builded image
+        stage('Docker run'){
                 steps {
                     script {
                     sh '''
@@ -34,21 +34,22 @@ stages {
                 }
             }
 
-        stage('Test Acceptance'){ // we launch the curl command to validate that the container responds to the request
+        stage('Test Acceptance'){
             steps {
                     script {
                     echo "BRANCH_NAME: ${BRANCH_NAME}"
                     sh '''
-                    curl localhost:8080/
+                    curl localhost:8001/api/v1/casts/docs
+                    curl localhost:8002/api/v1/movies/docs
                     '''
                     }
             }
 
         }
-        stage('Docker Push'){ //we pass the built image to our docker hub account
+        stage('Docker Push'){
             environment
             {
-                DOCKER_PASS = credentials("DOCKER_HUB_PASS") // we retrieve  docker password from secret text called docker_hub_pass saved on jenkins
+                DOCKER_PASS = credentials("DOCKER_HUB_PASS")
             }
 
             steps {
@@ -68,7 +69,7 @@ stages {
 stage('Deploiement en dev'){
         environment
         {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+        KUBECONFIG = credentials("config")
         }
             steps {
                 script {
@@ -79,7 +80,6 @@ stage('Deploiement en dev'){
                 cat $KUBECONFIG > .kube/config
                 cp moviecast_api_helm/values.yaml values.yml
                 cat values.yml
-                #sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install moviecast-api moviecast_api_helm --values=values.yml --namespace dev
                 '''
                 }
@@ -89,7 +89,7 @@ stage('Deploiement en dev'){
 stage('Deploiement en qa'){
         environment
         {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+        KUBECONFIG = credentials("config")
         }
             steps {
                 script {
@@ -100,7 +100,6 @@ stage('Deploiement en qa'){
                 cat $KUBECONFIG > .kube/config
                 cp moviecast_api_helm/values.yaml values.yml
                 cat values.yml
-                #sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install moviecast-api moviecast_api_helm --values=values.yml --namespace qa
                 '''
                 }
@@ -110,7 +109,7 @@ stage('Deploiement en qa'){
 stage('Deploiement en staging'){
         environment
         {
-        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+        KUBECONFIG = credentials("config")
         }
             steps {
                 script {
@@ -121,7 +120,6 @@ stage('Deploiement en staging'){
                 cat $KUBECONFIG > .kube/config
                 cp moviecast_api_helm/values.yaml values.yml
                 cat values.yml
-#                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install moviecast-api moviecast_api_helm --values=values.yml --namespace staging
                 '''
                 }
@@ -131,7 +129,7 @@ stage('Deploiement en staging'){
 stage('Deploiement en prod'){
         environment
         {
-          KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+          KUBECONFIG = credentials("config")
         }
         when {
           expression {
@@ -150,7 +148,6 @@ stage('Deploiement en prod'){
                 cat $KUBECONFIG > .kube/config
                 cp moviecast_api_helm/values.yaml values.yml
                 cat values.yml
-                #sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 helm upgrade --install moviecast-api moviecast_api_helm --values=values.yml --namespace prod
                 '''
                 }
