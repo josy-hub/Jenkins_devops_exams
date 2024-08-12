@@ -5,6 +5,7 @@ DOCKER_REPO = "jenkins_devops_exams"
 DOCKER_IMAGE_CAST = "jenkins_devops_exams_cast_service"
 DOCKER_IMAGE_MOVIE = "jenkins_devops_exams_movie_service"
 DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build in order to increment the value by 1 with each new build
+BRANCH_NAME = env.BRANCH_NAME ?: env.GIT_BRANCH
 }
 agent any // Jenkins will be able to select all available agents
 stages {
@@ -36,7 +37,7 @@ stages {
         stage('Test Acceptance'){ // we launch the curl command to validate that the container responds to the request
             steps {
                     script {
-                    echo "BRANCH_NAME: ${env.BRANCH_NAME}"
+                    echo "BRANCH_NAME: ${BRANCH_NAME}"
                     sh '''
                     curl localhost:8080/
                     '''
@@ -134,7 +135,7 @@ stage('Deploiement en prod'){
         }
         when {
           expression {
-            env.BRANCH_NAME ==~ /(main|master)/
+            BRANCH_NAME ==~ /(main|master)/
           }
         }
             steps {
