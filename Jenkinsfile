@@ -37,7 +37,7 @@ stages {
             steps {
                     script {
                     sh '''
-                    echo " Branche actuelle: $env.BRANCH_NAME"
+                    echo " Branche actuelle: ${env.BRANCH_NAME}"
                     curl localhost:8081/
                     '''
                     }
