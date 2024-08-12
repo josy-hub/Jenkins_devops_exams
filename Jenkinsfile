@@ -133,7 +133,8 @@ stage('Deploiement en prod'){
         }
         when {
           expression {
-            return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
+            expression { BRANCH_NAME ==~ /(main|master)/ }
+#            return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
           }
         }
             steps {
