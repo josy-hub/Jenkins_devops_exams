@@ -36,9 +36,9 @@ stages {
         stage('Test Acceptance'){ // we launch the curl command to validate that the container responds to the request
             steps {
                     script {
+                    echo "BRANCH_NAME: ${env.BRANCH_NAME}"
                     sh '''
-                    echo " Branche actuelle: ${env.BRANCH_NAME}"
-                    curl localhost:8081/
+                    curl localhost:8080/
                     '''
                     }
             }
